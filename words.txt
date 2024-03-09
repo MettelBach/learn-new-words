@@ -1,0 +1,59 @@
+Appears - появляется
+Within - внутри
+Essence - сущность 
+Declare - объявить
+Append - добавить
+Far - далеко
+Exist - существует
+Received - полученный
+Conditional Statement - условное выражение
+Variable - переменная
+Divide - разделять
+Admire - восхищаться
+Interrupt - прерывать
+Deserve - заслуживать
+It's decided - это решено
+Decide - решить
+Unwanted - нежеланные
+Were Supposed - должен был
+Only egg - единственное, одно яйцо
+Reflect - отражать
+Advantage - преимущество
+Submit an application - отправить заявку
+Nearby - возле
+Appointment -встреча
+Grab - хватать
+Almost - почти
+Expect - ожидать
+Careful - осторожен
+I guess - я предполагаю
+Hard headed - упрямый
+Convince - убеждать
+Prepared - готов
+Above - выше
+Keep - держать
+Summon - вызвать
+Performs - выполнить
+Discard - отказаться
+Madness - безумие
+Concern - беспокойство
+Forward - вперед
+Distracted - не сосредоточен
+Dare - осмелиться
+Unless - если не
+Doubt - сомневаться
+Perhaps - возможно
+Precisely - именно так
+Weak - слабый
+Rush - торопить
+Plenty - множество
+Occur - происходить
+Increase - увеличить
+Careless - неосторожен
+Able to do - способен сделать
+Primitive data type - примитивный тип данных
+Wrapper Class - Обертка
+I don't even think - я не думал даже
+Provide - предоставлять
+Otherwise - в противном случае
+Determine - определять
