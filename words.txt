@@ -51,7 +51,6 @@ Occur - происходить
 Increase - увеличить
 Careless - неосторожен
 Able to do - способен сделать
-Primitive data type - примитивный тип данных
 Wrapper Class - Обертка
 I don't even think - я не думал даже
 Provide - предоставлять
