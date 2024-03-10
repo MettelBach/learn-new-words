@@ -6,7 +6,6 @@ Append - добавить
 Far - далеко
 Exist - существует
 Received - полученный
-Conditional Statement - условное выражение
 Variable - переменная
 Divide - разделять
 Admire - восхищаться
@@ -51,9 +50,7 @@ Occur - происходить
 Increase - увеличить
 Careless - неосторожен
 Able to do - способен сделать
-Primitive data type - примитивный тип данных
 Wrapper Class - Обертка
-I don't even think - я не думал даже
 Provide - предоставлять
 Otherwise - в противном случае
 Determine - определять
