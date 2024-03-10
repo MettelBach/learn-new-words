@@ -1,11 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
+    let fileInputOpened = false; // Флаг для отслеживания открытия окна выбора файла
+
     getWords();
 
     function getWords() {
         const myForm = document.querySelector("#myForm");
         const inpFile = document.querySelector("#inpFile");
+        const inpFileLabel = document.querySelector("#inpFileLabel");
     
-        myForm.addEventListener("submit", e => {
+        inpFileLabel.addEventListener("click", function() {
+            if (!fileInputOpened) {
+                inpFile.click();
+                fileInputOpened = true;
+            }
+        });
+    
+        myForm.addEventListener("submit", function(e) {
             e.preventDefault();
     
             const formData = new FormData();
@@ -57,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dict.cyrillic.check.push(true);
             }
         }
-        console.log(dict); // Проверяем содержимое объекта dict
+        console.log(dict);
         const nextButton = document.querySelector(".next");
         const cardCont = document.querySelector(".card-container");
     
@@ -66,10 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function returnWords(dict, nextButton, cardCont) {
-        console.log(dict); // Проверяем содержимое объекта dict
-        nextButton.addEventListener("click", (e) => {
+        console.log(dict);
+        nextButton.addEventListener("click", function(e) {
             const words = returnRandomWordFromDict(dict);
-            console.log(words); // Проверяем значения words
+            console.log(words);
             cardCont.innerHTML = `
                 <div class="card-horizontal">
                     <div class="card-front"> 
@@ -103,5 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
         return [randomWord, translationOfRandomElement];
     }
-    
+
+    // function whileWordsDontEnd(dict) {}
 });

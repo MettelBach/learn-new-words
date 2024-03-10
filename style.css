@@ -1,11 +1,41 @@
 form {
     display: block;
     text-align: center;
+    position:relative;
 }
 
 section.card {
     display: none;
     text-align: center;
+} 
+
+button.file-btn {
+    width: 60px;
+    height: 30px;
+    margin: 20px auto;
+    display: block;
+    border-radius: 15px;
+    background-color: black;
+    color: white;
+}
+
+button.file-btn:hover {
+    border: 1px solid black;
+    background-color: transparent;
+    color: black;
+}
+
+#inpFileLabel {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 30px;
+    color: #8d6e63;
+    border: 2px dashed #8d6e63;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 button.next {
