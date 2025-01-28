@@ -20,28 +20,36 @@
             <div class="card-container">
                 <div class="card-horizontal">
                     <div class="card-front"> 
-                    <article class="card-front-content">
-                        <h1>Smth went wrong</h1>
-                    <article>
+                        <article class="card-front-content">
+                            <h1>Smth went wrong</h1>
+                        </article>
                     </div>
                     <div class="card-back card-back-hr">
-                    <article class="card-back-content">
-                    <h1>Strange file</h1>
-                <article>
+                        <article class="card-back-content">
+                            <h1>Strange file</h1>
+                        </article>
                     </div>
                 </div>
             </div>
         </div>
-        <button class="next">
-            Next
-        </button>
+        <div class="control-buttons">
+            <button class="correct">Угадал</button>
+            <button class="wrong">Не угадал</button>
+            <button class="skip">Пропустить</button>
+            <button class="finish" style="display: none;">Закончить</button>
+            <button class="next" style="display: none;">Next</button>
+        </div>
+    </section>
+
+    <section class="statistics" style="display: none;">
+        <h2>Статистика</h2>
+        <p>Угадано слов: <span class="correct-count">0</span></p>
+        <p>Не угадано слов: <span class="wrong-count">0</span></p>
+        <p>Пропущено слов: <span class="skipped-count">0</span></p>
+        <button class="restart">Начать с начала</button>
     </section>
 
     <div class="start-area">
-        <!-- <div class="words-list">
-            no words
-        </div> -->
-
         <div class="btns">
             <h1>Choose one of the modes</h1>
             <button class="frst-ver">
@@ -52,6 +60,6 @@
             </button>
         </div>
     </div>
-    <script src="scrypt.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
