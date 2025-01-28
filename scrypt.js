@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
           frontBackground = document.querySelector('.card-front'),
           backBackground = document.querySelector('.card-back');
 
+    let currentIndex = 0;
+    let currentDict = null;
+    let isSequentialMode = false;
+
     myForm.addEventListener("submit", handleFormSubmit);
     nextButton.addEventListener("click", handleNextButtonClick);
 
@@ -66,37 +70,42 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        currentDict = dict;
         chosenMode(dict);
+    }
+
+    function returnSequentialWords(dict) {
+        if (currentIndex >= dict.latin.words.length) {
+            alert("You've reached the end of the word list!");
+            currentIndex = 0;
+        }
+        
+        const words = [dict.latin.words[currentIndex], dict.cyrillic.words[currentIndex]];
+        currentIndex++;
+        return words;
     }
 
     function returnWords(dict) {
         nextButton.addEventListener("click", function() {
-            const words = returnRandomWordFromDict(dict);
+            const words = isSequentialMode ? 
+                         returnSequentialWords(dict) : 
+                         returnRandomWordFromDict(dict);
             renderWords(words);
         });
     }
 
     function returnFirstWords(dict) {          
-        const randomIndex = Math.floor(Math.random() * dict.latin.words.length);
-        frontWord.textContent = dict.latin.words[randomIndex];
-        backWord.textContent = dict.cyrillic.words[randomIndex];
+        frontWord.textContent = dict.latin.words[0];
+        backWord.textContent = dict.cyrillic.words[0];
+        currentIndex = 1;
     }
 
     function returnRandomWordFromDict(dict) {
-        let randomIndex = Math.floor(Math.random() * dict.latin.words.length),
-            randomLang = Math.round(Math.random()),
-            // randomLang = 0,
-            randomWord, 
-            translationOfRandomElement;
-
-        if (randomLang === 0) {
-            randomWord = dict.latin.words[randomIndex];
-            translationOfRandomElement = dict.cyrillic.words[randomIndex];
-        } else {
-            randomWord = dict.cyrillic.words[randomIndex];
-            translationOfRandomElement = dict.latin.words[randomIndex];
-        }
-
+        let randomIndex = Math.floor(Math.random() * dict.latin.words.length);
+        // Always show English (latin) first
+        const randomWord = dict.latin.words[randomIndex];
+        const translationOfRandomElement = dict.cyrillic.words[randomIndex];
+        
         return [randomWord, translationOfRandomElement];
     }
 
@@ -107,20 +116,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleNextButtonClick() {
-        const words = returnRandomWordFromDict(dict);
+        const words = isSequentialMode ? 
+                     returnSequentialWords(currentDict) : 
+                     returnRandomWordFromDict(currentDict);
         renderWords(words);
     }
 
     function chosenMode(dict) {
+        // Infinity random mode
         buttons[0].addEventListener("click", function() {
             startArea.style.display = "none";
             card.style.display = "block";
+            isSequentialMode = false;
             returnFirstWords(dict);
             returnWords(dict);
         });
 
+        // To end mode
         buttons[1].addEventListener("click", function() {
-            console.log("Clicked on the second version button");
+            startArea.style.display = "none";
+            card.style.display = "block";
+            isSequentialMode = true;
+            currentIndex = 0;
+            returnFirstWords(dict);
+            returnWords(dict);
         });
     }
 
@@ -132,18 +151,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getRandomColors() {
         const colors = [
-        '#4f4a2a', '#b00b1e', '#3f0e07', 
-        '#4f4a2a', '#000080', '#801818', 
-        '#556b2f', '#672c47', '#2c4767', 
-        '#6f4e37', '#81655F', '#000000', 
-        '#581845', '#900C3F', '#614751'];
+            '#4f4a2a', '#b00b1e', '#3f0e07', 
+            '#4f4a2a', '#000080', '#801818', 
+            '#556b2f', '#672c47', '#2c4767', 
+            '#6f4e37', '#81655F', '#000000', 
+            '#581845', '#900C3F', '#614751'
+        ];
 
         const index1 = Math.floor(Math.random() * colors.length);
         let index2;
         do {
-          index2 = Math.floor(Math.random() * colors.length);
+            index2 = Math.floor(Math.random() * colors.length);
         } while (index2 === index1);
       
         return [colors[index1], colors[index2]];
-      }
+    }
 });
