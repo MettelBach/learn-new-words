@@ -9,14 +9,36 @@ document.addEventListener('DOMContentLoaded', function() {
           buttons = document.querySelectorAll('.btns'),
           starButton = document.querySelector('.file-btn'),
           frontBackground = document.querySelector('.card-front'),
-          backBackground = document.querySelector('.card-back');
+          backBackground = document.querySelector('.card-back'),
+          statisticsSection = document.querySelector('.statistics'),
+          controlButtons = document.querySelector('.control-buttons'),
+          finishButton = document.querySelector('.finish'),
+          restartButton = document.querySelector('.restart');
+
+    // Statistics elements
+    const correctCount = document.querySelector('.correct-count'),
+          wrongCount = document.querySelector('.wrong-count'),
+          skippedCount = document.querySelector('.skipped-count');
+
+    // Statistics tracking
+    let stats = {
+        correct: 0,
+        wrong: 0,
+        skipped: 0
+    };
 
     let currentIndex = 0;
     let currentDict = null;
     let isSequentialMode = false;
 
     myForm.addEventListener("submit", handleFormSubmit);
-    nextButton.addEventListener("click", handleNextButtonClick);
+    
+    // Add event listeners for control buttons
+    document.querySelector('.correct').addEventListener('click', () => handleAnswer('correct'));
+    document.querySelector('.wrong').addEventListener('click', () => handleAnswer('wrong'));
+    document.querySelector('.skip').addEventListener('click', () => handleAnswer('skipped'));
+    finishButton.addEventListener('click', showStatistics);
+    restartButton.addEventListener('click', restartGame);
 
     function handleFormSubmit(event) {
         event.preventDefault();
@@ -74,30 +96,31 @@ document.addEventListener('DOMContentLoaded', function() {
         chosenMode(dict);
     }
 
+    function handleAnswer(type) {
+        // Update statistics
+        stats[type]++;
+        
+        // Show next word
+        if (isSequentialMode) {
+            const words = returnSequentialWords(currentDict);
+            if (words) {
+                renderWords(words);
+            }
+        } else {
+            const words = returnRandomWordFromDict(currentDict);
+            renderWords(words);
+        }
+    }
+
     function returnSequentialWords(dict) {
         if (currentIndex >= dict.latin.words.length) {
-            alert("You've reached the end of the word list!");
-            currentIndex = 0;
+            showStatistics();
+            return null;
         }
         
         const words = [dict.latin.words[currentIndex], dict.cyrillic.words[currentIndex]];
         currentIndex++;
         return words;
-    }
-
-    function returnWords(dict) {
-        nextButton.addEventListener("click", function() {
-            const words = isSequentialMode ? 
-                         returnSequentialWords(dict) : 
-                         returnRandomWordFromDict(dict);
-            renderWords(words);
-        });
-    }
-
-    function returnFirstWords(dict) {          
-        frontWord.textContent = dict.latin.words[0];
-        backWord.textContent = dict.cyrillic.words[0];
-        currentIndex = 1;
     }
 
     function returnRandomWordFromDict(dict) {
@@ -110,37 +133,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderWords(words) {
-        setAnotherBackgrounds();
-        frontWord.textContent = words[0];
-        backWord.textContent = words[1];
-    }
-
-    function handleNextButtonClick() {
-        const words = isSequentialMode ? 
-                     returnSequentialWords(currentDict) : 
-                     returnRandomWordFromDict(currentDict);
-        renderWords(words);
+        if (words) {
+            setAnotherBackgrounds();
+            frontWord.textContent = words[0];
+            backWord.textContent = words[1];
+        }
     }
 
     function chosenMode(dict) {
         // Infinity random mode
         buttons[0].addEventListener("click", function() {
-            startArea.style.display = "none";
-            card.style.display = "block";
-            isSequentialMode = false;
-            returnFirstWords(dict);
-            returnWords(dict);
+            setupGame(dict, false);
         });
 
         // To end mode
         buttons[1].addEventListener("click", function() {
-            startArea.style.display = "none";
-            card.style.display = "block";
-            isSequentialMode = true;
-            currentIndex = 0;
-            returnFirstWords(dict);
-            returnWords(dict);
+            setupGame(dict, true);
         });
+    }
+
+    function setupGame(dict, sequential) {
+        startArea.style.display = "none";
+        card.style.display = "block";
+        statisticsSection.style.display = "none";
+        isSequentialMode = sequential;
+        currentIndex = 0;
+        stats = { correct: 0, wrong: 0, skipped: 0 };
+        
+        // Show/hide finish button based on mode
+        finishButton.style.display = sequential ? "none" : "block";
+        
+        // Show first word
+        const words = sequential ? returnSequentialWords(dict) : returnRandomWordFromDict(dict);
+        renderWords(words);
+    }
+
+    function showStatistics() {
+        card.style.display = "none";
+        statisticsSection.style.display = "block";
+        
+        // Update statistics display
+        correctCount.textContent = stats.correct;
+        wrongCount.textContent = stats.wrong;
+        skippedCount.textContent = stats.skipped;
+    }
+
+    function restartGame() {
+        statisticsSection.style.display = "none";
+        startArea.style.display = "block";
+        // Reset statistics
+        stats = { correct: 0, wrong: 0, skipped: 0 };
+        currentIndex = 0;
     }
 
     function setAnotherBackgrounds() {
