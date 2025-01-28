@@ -141,15 +141,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function chosenMode(dict) {
-        // Infinity random mode
-        buttons[0].addEventListener("click", function() {
-            setupGame(dict, false);
+    buttons.forEach((button, index) => {
+        button.addEventListener("click", function() {
+            if (index === 0) {
+                setupGame(dict, false);  // infinity random mode
+            } else if (index === 1) {
+                setupGame(dict, true);   // sequential mode
+            }
         });
-
-        // To end mode
-        buttons[1].addEventListener("click", function() {
-            setupGame(dict, true);
-        });
+    });
     }
 
     function setupGame(dict, sequential) {
