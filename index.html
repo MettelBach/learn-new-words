@@ -1,57 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Word Learner</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Learn new English words</h1>
+    <div class="app-container">
 
-    <form class="form" id="myForm">
-        <label for="inpFile" id="inpFileLabel">Load the words</label>
-        <input type="file" accept=".txt" id="inpFile" style="display: none;">
-        <button class="file-btn" type="submit">Start</button>
-    </form>
+        <h1>Учим слова</h1>
 
-    <section class="card">
-        <div class="align">
+        <section id="file-loader" class="centered-section">
+            <p>Загрузите файл .txt со словами в формате "Слово - Перевод" (по одной паре на строку).</p>
+            <label for="file-input" class="btn">Выбрать файл</label>
+            <input type="file" id="file-input" accept=".txt" hidden>
+            <p id="file-name-display"></p>
+            <button id="start-btn" class="btn" disabled>Начать</button>
+        </section>
+
+        <section id="mode-selector" class="centered-section hidden">
+            <h2>Выберите режим:</h2>
+            <div class="mode-buttons">
+                <button class="btn mode-btn" data-mode="random">Случайно (Бесконечно)</button>
+                <button class="btn mode-btn" data-mode="toEndBoth">До конца (Оба направления)</button>
+                <button class="btn mode-btn" data-mode="onlyRus">Только Русский</button>
+                <button class="btn mode-btn" data-mode="onlyEng">Только Английский</button>
+            </div>
+        </section>
+
+        <section id="card-area" class="centered-section hidden">
             <div class="card-container">
-                <div class="card-horizontal">
-                    <div class="card-front"> 
-                    <article class="card-front-content">
-                        <h1>Smth went wrong</h1>
-                    <article>
+                <div class="card" id="word-card">
+                    <div class="card-face card-front">
+                        <p id="card-front-text">Front</p>
                     </div>
-                    <div class="card-back card-back-hr">
-                    <article class="card-back-content">
-                    <h1>Strange file</h1>
-                <article>
+                    <div class="card-face card-back">
+                        <p id="card-back-text">Back</p>
                     </div>
                 </div>
             </div>
-        </div>
-        <button class="next">
-            Next
-        </button>
-    </section>
+             <p class="instructions">Нажмите на карточку, чтобы увидеть перевод.</p>
+            <button id="next-btn" class="btn">Следующее</button>
+            <button id="change-mode-btn" class="btn btn-secondary">Сменить режим</button>
+        </section>
 
-    <div class="start-area">
-        <!-- <div class="words-list">
-            no words
-        </div> -->
-
-        <div class="btns">
-            <h1>Choose one of the modes</h1>
-            <button class="frst-ver">
-                Infinity random
-            </button>
-            <button class="scnd-ver">
-                To end
-            </button>
-        </div>
     </div>
-    <script src="scrypt.js"></script>
+
+    <script src="script.js"></script>
 </body>
-                </html>
+</html>
