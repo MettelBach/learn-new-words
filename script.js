@@ -1,4 +1,3 @@
- 
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const fileLoaderSection = document.getElementById('file-loader');
@@ -36,6 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Functions ---
+
+    // --- НОВОЕ: Функция для перемешивания массива (Fisher-Yates shuffle) ---
+    function shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        // Пока есть элементы для перемешивания
+        while (currentIndex !== 0) {
+            // Выбираем оставшийся элемент
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            // Меняем его местами с текущим элементом
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
 
     function handleFileSelect(event) {
         const file = event.target.files[0];
@@ -90,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         wordPairs.push({ eng: part2, rus: part1 });
                     } else {
                          console.warn(`Skipping line due to ambiguous languages or format: "${line}"`);
-                         // Optionally handle cases where both/neither are detected as English
                     }
                 }
             } else if (line.trim()) {
@@ -112,12 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleModeSelection(event) {
         if (event.target.classList.contains('mode-btn')) {
             currentMode = event.target.dataset.mode;
-            currentIndex = 0;
-            prepareSequenceForMode(); // Prepare the word order if needed
+            currentIndex = 0; // Сбрасываем индекс
+            prepareSequenceForMode(); // Готовим последовательность (уже с перемешиванием)
+
+            // --- ИЗМЕНЕНИЕ: Включаем кнопку "Следующее" при старте нового режима ---
+            nextBtn.disabled = wordPairs.length === 0 || preparedSequence.length === 0; // Выключаем если слов нет
 
             modeSelectorSection.classList.add('hidden');
             cardAreaSection.classList.remove('hidden');
-            showNext(); // Display the first card of the selected mode
+            showNext(); // Показываем первую карточку
         }
     }
 
@@ -125,27 +141,27 @@ document.addEventListener('DOMContentLoaded', () => {
         preparedSequence = [];
         if (!currentMode || wordPairs.length === 0) return;
 
+        // --- ИЗМЕНЕНИЕ: Создаем перемешанную копию ОДИН РАЗ перед switch ---
+        // Мы используем [...wordPairs], чтобы создать копию и не изменять исходный массив wordPairs
+        const shuffledPairs = shuffleArray([...wordPairs]);
+
         switch (currentMode) {
             case 'toEndBoth':
-                // Phase 1: Rus -> Eng
-                wordPairs.forEach(pair => preparedSequence.push({ front: pair.rus, back: pair.eng }));
-                // Phase 2: Eng -> Rus
-                wordPairs.forEach(pair => preparedSequence.push({ front: pair.eng, back: pair.rus }));
+                // Фаза 1: Rus -> Eng (из перемешанного списка)
+                shuffledPairs.forEach(pair => preparedSequence.push({ front: pair.rus, back: pair.eng }));
+                // Фаза 2: Eng -> Rus (из того же перемешанного списка)
+                shuffledPairs.forEach(pair => preparedSequence.push({ front: pair.eng, back: pair.rus }));
                 break;
             case 'onlyRus':
-                // --- ИЗМЕНЕНИЕ 1 ---
-                // Было: preparedSequence.push({ front: pair.rus, back: "" });
-                // Стало: Добавляем английский перевод на обратную сторону
-                wordPairs.forEach(pair => preparedSequence.push({ front: pair.rus, back: pair.eng }));
+                // Используем перемешанный список
+                shuffledPairs.forEach(pair => preparedSequence.push({ front: pair.rus, back: pair.eng }));
                 break;
             case 'onlyEng':
-                // --- ИЗМЕНЕНИЕ 1 ---
-                // Было: preparedSequence.push({ front: pair.eng, back: "" });
-                // Стало: Добавляем русский перевод на обратную сторону
-                wordPairs.forEach(pair => preparedSequence.push({ front: pair.eng, back: pair.rus }));
+                // Используем перемешанный список
+                shuffledPairs.forEach(pair => preparedSequence.push({ front: pair.eng, back: pair.rus }));
                 break;
             case 'random':
-                // No sequence needed, handled directly in showNext
+                // Случайный режим не требует предгенерации последовательности
                 break;
         }
          console.log(`Prepared sequence for mode "${currentMode}" with ${preparedSequence.length} items.`);
@@ -154,90 +170,74 @@ document.addEventListener('DOMContentLoaded', () => {
     function showNext() {
         if (wordPairs.length === 0) {
             updateCard("Нет слов", "Загрузите файл");
+            nextBtn.disabled = true; // Отключаем кнопку если нет слов
             return;
         }
-        resetCardState(); // Ensure card is facing front
+        resetCardState(); // Возвращаем карточку в исходное состояние (не перевернута)
 
         let front = "";
         let back = "";
 
         switch (currentMode) {
             case 'random':
+                // Случайный режим остается бесконечным
                 const randomIndex = Math.floor(Math.random() * wordPairs.length);
                 const pair = wordPairs[randomIndex];
                 const showEngFirst = Math.random() < 0.5;
                 front = showEngFirst ? pair.eng : pair.rus;
                 back = showEngFirst ? pair.rus : pair.eng;
+                nextBtn.disabled = false; // Убедимся, что кнопка активна
                 break;
 
             case 'toEndBoth':
             case 'onlyRus':
             case 'onlyEng':
                 if (preparedSequence.length === 0) {
-                    // This case might happen if file loading failed after selecting mode,
-                    // or if wordPairs was empty initially.
-                     updateCard("Нет слов", "Проверьте файл или режим");
-                     return;
-                }
-                 if (currentIndex >= preparedSequence.length) {
-                     // Optionally, show a message that the list ended or disable next button
-                     // For now, just stop or loop back (looping back as originally implemented)
-                     currentIndex = 0; // Loop back
-                     // updateCard("Конец списка", "Смените режим или начните заново");
-                     // return; // Or stop here
-                 }
-                 // Make sure preparedSequence[currentIndex] exists before accessing properties
-                 if (currentIndex < preparedSequence.length) {
-                    front = preparedSequence[currentIndex].front;
-                    back = preparedSequence[currentIndex].back;
-                    currentIndex++;
-                 } else {
-                    // Should not happen if looping or stopping correctly, but as a fallback:
-                    updateCard("Ошибка", "Неверный индекс");
+                    updateCard("Ошибка", "Нет данных для режима");
+                    nextBtn.disabled = true;
                     return;
-                 }
+                }
+
+                // --- ИЗМЕНЕНИЕ: Проверяем, не закончилась ли последовательность ---
+                if (currentIndex >= preparedSequence.length) {
+                    // Последовательность завершена
+                    updateCard("Конец списка!", "Смените режим"); // Сообщение о завершении
+                    nextBtn.disabled = true; // Отключаем кнопку "Следующее"
+                    return; // Выходим из функции, не показывая больше карточек
+                }
+
+                // Если последовательность не закончена, показываем текущий элемент
+                front = preparedSequence[currentIndex].front;
+                back = preparedSequence[currentIndex].back;
+
+                // --- ИЗМЕНЕНИЕ: Увеличиваем индекс ПОСЛЕ получения данных ---
+                currentIndex++;
+                // Кнопка остается активной, т.к. мы еще не проверили следующий шаг
+                 nextBtn.disabled = false;
+
                 break;
+
             default:
                  updateCard("Ошибка", "Неизвестный режим");
-                 return; // Stop if mode is invalid
+                 nextBtn.disabled = true;
+                 return;
         }
 
         updateCard(front, back);
     }
 
      function updateCard(frontText, backText) {
-        cardFrontText.textContent = frontText || " "; // Use space if empty
-        cardBackText.textContent = backText || " ";  // Use space if empty
+        cardFrontText.textContent = frontText || " ";
+        cardBackText.textContent = backText || " ";
 
-        // --- УДАЛЕНИЕ/ИЗМЕНЕНИЕ ЛОГИКИ СТИЛИЗАЦИИ ---
-        // Убираем специальное форматирование для "пустой" обратной стороны,
-        // так как теперь она всегда должна содержать перевод в этих режимах.
+        // Восстанавливаем стили по умолчанию для обратной стороны (на всякий случай)
         const backFace = wordCard.querySelector('.card-back');
-        // Просто устанавливаем стандартные стили (если они вдруг менялись)
-        backFace.style.backgroundColor = '#d1e0eb'; // Restore default style
-        backFace.style.color = '#222';         // Restore default style
-
-        /* Старая логика, которая теперь не нужна:
-        if (!backText || backText.trim() === "") {
-             backFace.style.backgroundColor = '#f8f9fa'; // Lighter background
-             backFace.style.color = '#adb5bd'; // Lighter text
-             cardBackText.textContent = '-'; // Placeholder for empty back
-        } else {
-             backFace.style.backgroundColor = '#d1e0eb'; // Restore default style
-             backFace.style.color = '#222';
-        }
-        */
+        backFace.style.backgroundColor = '#d1e0eb';
+        backFace.style.color = '#222';
     }
 
     function flipCard() {
-        // --- ИЗМЕНЕНИЕ 2 ---
-        // Убираем условие, которое запрещало переворот в режимах onlyRus/onlyEng
-        /* Старое условие:
-        if ((currentMode === 'onlyRus' || currentMode === 'onlyEng') && cardBackText.textContent === '-') {
-             return;
-        }
-        */
-        // Теперь просто переворачиваем карточку при клике в любом случае
+        // Просто переворачиваем карточку
         wordCard.classList.toggle('is-flipped');
     }
 
