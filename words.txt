@@ -1,6 +1,6 @@
 Fed up - Сыт по горло
 Keen on - Увлекаться
-Gambling - Азарнтные игры
+Gambling - Азартные игры
 Excited about - Восхищен
 Satisfied with - Удоволетворен
 Disappointed about - Разочарован
@@ -15,14 +15,14 @@ Obviously - Очевидно
 Definetly - Определенно
 Suppose - Предполагать
 Mess - Беспорядок
-Behavior - Поведение
+Behaviour - Поведение
 Suddenly - Случайно
 Lead to - Приводить
 Consist of - Состоит из
 Managed to - Суметь
 Succeeded in - Удалось
-Refuse - Отказ
-Refusal - Отказывать
+Refuse - Отказывать
+Refusal - Отказ
 Lack of - Нехватка
 Confidence - Уверенность
 Advantage - Преимущество
@@ -49,3 +49,6 @@ Strangely - Странно
 Criticism - Критика
 Issue - Проблема, вопрос
 Complain to - Жаловаться на
+On the right - Справа
+On the left - Слева
+Accident - случай
