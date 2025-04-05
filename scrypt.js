@@ -1,149 +1,248 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const myForm = document.querySelector("#myForm"),
-          inpFile = document.querySelector("#inpFile"),
-          card = document.querySelector(".card"),
-          nextButton = document.querySelector(".next"),
-          frontWord = document.querySelector('.card-front-content h1'),
-          backWord = document.querySelector('.card-back-content h1'),
-          startArea = document.querySelector('.start-area'),
-          buttons = document.querySelectorAll('.btns'),
-          starButton = document.querySelector('.file-btn'),
-          frontBackground = document.querySelector('.card-front'),
-          backBackground = document.querySelector('.card-back');
+ 
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
+    const fileLoaderSection = document.getElementById('file-loader');
+    const fileInput = document.getElementById('file-input');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const startBtn = document.getElementById('start-btn');
 
-    myForm.addEventListener("submit", handleFormSubmit);
-    nextButton.addEventListener("click", handleNextButtonClick);
+    const modeSelectorSection = document.getElementById('mode-selector');
+    const modeButtonsContainer = document.querySelector('.mode-buttons');
 
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        const formData = new FormData();
-        formData.append("inpFile", inpFile.files[0]);
-        
-        starButton.style.display = "block";
-        getWordsFromFileWithWords(formData);
-    }
+    const cardAreaSection = document.getElementById('card-area');
+    const wordCard = document.getElementById('word-card');
+    const cardFrontText = document.getElementById('card-front-text');
+    const cardBackText = document.getElementById('card-back-text');
+    const nextBtn = document.getElementById('next-btn');
+    const changeModeBtn = document.getElementById('change-mode-btn');
 
-    function getWordsFromFileWithWords(formData) {
-        if (formData.has("inpFile")) {
-            const file = formData.get("inpFile");
-            const reader = new FileReader();
+    // --- State Variables ---
+    let wordPairs = []; // Array of { eng: "...", rus: "..." }
+    let currentMode = null;
+    let currentIndex = 0;
+    let preparedSequence = []; // For sequential modes: { front: "...", back: "..." }
 
-            reader.onload = function(event) {
-                const fileContent = event.target.result;
-                const wordsArray = fileContent.split(/\s*[\n-]+\s*/);
+    // --- Event Listeners ---
+    fileInput.addEventListener('change', handleFileSelect);
+    startBtn.addEventListener('click', showModeSelector);
+    modeButtonsContainer.addEventListener('click', handleModeSelection); // Event delegation
+    wordCard.addEventListener('click', flipCard);
+    nextBtn.addEventListener('click', showNext);
+    changeModeBtn.addEventListener('click', () => {
+        // Reset to mode selection
+        cardAreaSection.classList.add('hidden');
+        modeSelectorSection.classList.remove('hidden');
+        resetCardState(); // Unflip card if needed
+    });
 
-                myForm.style.display = "none";
-                startArea.style.display = "block";
+    // --- Functions ---
 
-                addWordsToArray(wordsArray);
-            };
-            reader.readAsText(file);
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+            fileNameDisplay.textContent = `Выбран файл: ${file.name}`;
+            startBtn.disabled = false; // Enable start button
+            readFileContent(file);
         } else {
-            console.error("Something went wrong");
+            fileNameDisplay.textContent = '';
+            startBtn.disabled = true;
+            wordPairs = []; // Clear words if file is deselected
         }
     }
 
-    function addWordsToArray(wordsArray) {
-        const wordsArrayRegex = /[a-zA-Z]/;
-        let dict = {
-            cyrillic: {
-                words: [],
-                check: []
-            },
-            latin: {
-                words: [],
-                check: []
+    function readFileContent(file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            parseFileContent(event.target.result);
+            if (wordPairs.length === 0) {
+                alert('Не удалось найти пары слов в файле. Проверьте формат: "Слово - Перевод" на каждой строке.');
+                fileNameDisplay.textContent = '';
+                startBtn.disabled = true;
+                fileInput.value = ''; // Reset file input
             }
         };
+        reader.onerror = () => {
+            alert('Ошибка чтения файла.');
+            fileNameDisplay.textContent = '';
+            startBtn.disabled = true;
+            wordPairs = [];
+            fileInput.value = ''; // Reset file input
+        };
+        reader.readAsText(file);
+    }
 
-        for (let word of wordsArray) {
-            if (wordsArrayRegex.test(word.trim())) {
-                dict.latin.words.push(word.trim().toLowerCase());
-                dict.latin.check.push(true);
-            } else {
-                dict.cyrillic.words.push(word.trim().toLowerCase());
-                dict.cyrillic.check.push(true);
+    function parseFileContent(text) {
+        wordPairs = []; // Reset previous words
+        const lines = text.split('\n');
+        const engRegex = /[a-zA-Z]/;
+
+        for (const line of lines) {
+            const parts = line.split(/\s*-\s*/); // Split by ' - ' allowing spaces
+            if (parts.length === 2) {
+                const part1 = parts[0].trim();
+                const part2 = parts[1].trim();
+
+                if (part1 && part2) {
+                    // Determine language based on regex
+                    if (engRegex.test(part1) && !engRegex.test(part2)) {
+                        wordPairs.push({ eng: part1, rus: part2 });
+                    } else if (!engRegex.test(part1) && engRegex.test(part2)) {
+                        wordPairs.push({ eng: part2, rus: part1 });
+                    } else {
+                         console.warn(`Skipping line due to ambiguous languages or format: "${line}"`);
+                         // Optionally handle cases where both/neither are detected as English
+                    }
+                }
+            } else if (line.trim()) {
+                console.warn(`Skipping line due to incorrect format (expected 'Word - Translation'): "${line}"`);
             }
         }
-
-        chosenMode(dict);
+        console.log(`Loaded ${wordPairs.length} word pairs.`);
     }
 
-    function returnWords(dict) {
-        nextButton.addEventListener("click", function() {
-            const words = returnRandomWordFromDict(dict);
-            renderWords(words);
-        });
-    }
-
-    function returnFirstWords(dict) {          
-        const randomIndex = Math.floor(Math.random() * dict.latin.words.length);
-        frontWord.textContent = dict.latin.words[randomIndex];
-        backWord.textContent = dict.cyrillic.words[randomIndex];
-    }
-
-    function returnRandomWordFromDict(dict) {
-        let randomIndex = Math.floor(Math.random() * dict.latin.words.length),
-            randomLang = Math.round(Math.random()),
-            // randomLang = 0,
-            randomWord, 
-            translationOfRandomElement;
-
-        if (randomLang === 0) {
-            randomWord = dict.latin.words[randomIndex];
-            translationOfRandomElement = dict.cyrillic.words[randomIndex];
+    function showModeSelector() {
+        if (wordPairs.length > 0) {
+            fileLoaderSection.classList.add('hidden');
+            modeSelectorSection.classList.remove('hidden');
         } else {
-            randomWord = dict.cyrillic.words[randomIndex];
-            translationOfRandomElement = dict.latin.words[randomIndex];
+            alert('Сначала загрузите файл с парами слов.');
+        }
+    }
+
+    function handleModeSelection(event) {
+        if (event.target.classList.contains('mode-btn')) {
+            currentMode = event.target.dataset.mode;
+            currentIndex = 0;
+            prepareSequenceForMode(); // Prepare the word order if needed
+
+            modeSelectorSection.classList.add('hidden');
+            cardAreaSection.classList.remove('hidden');
+            showNext(); // Display the first card of the selected mode
+        }
+    }
+
+    function prepareSequenceForMode() {
+        preparedSequence = [];
+        if (!currentMode || wordPairs.length === 0) return;
+
+        switch (currentMode) {
+            case 'toEndBoth':
+                // Phase 1: Rus -> Eng
+                wordPairs.forEach(pair => preparedSequence.push({ front: pair.rus, back: pair.eng }));
+                // Phase 2: Eng -> Rus
+                wordPairs.forEach(pair => preparedSequence.push({ front: pair.eng, back: pair.rus }));
+                break;
+            case 'onlyRus':
+                // --- ИЗМЕНЕНИЕ 1 ---
+                // Было: preparedSequence.push({ front: pair.rus, back: "" });
+                // Стало: Добавляем английский перевод на обратную сторону
+                wordPairs.forEach(pair => preparedSequence.push({ front: pair.rus, back: pair.eng }));
+                break;
+            case 'onlyEng':
+                // --- ИЗМЕНЕНИЕ 1 ---
+                // Было: preparedSequence.push({ front: pair.eng, back: "" });
+                // Стало: Добавляем русский перевод на обратную сторону
+                wordPairs.forEach(pair => preparedSequence.push({ front: pair.eng, back: pair.rus }));
+                break;
+            case 'random':
+                // No sequence needed, handled directly in showNext
+                break;
+        }
+         console.log(`Prepared sequence for mode "${currentMode}" with ${preparedSequence.length} items.`);
+    }
+
+    function showNext() {
+        if (wordPairs.length === 0) {
+            updateCard("Нет слов", "Загрузите файл");
+            return;
+        }
+        resetCardState(); // Ensure card is facing front
+
+        let front = "";
+        let back = "";
+
+        switch (currentMode) {
+            case 'random':
+                const randomIndex = Math.floor(Math.random() * wordPairs.length);
+                const pair = wordPairs[randomIndex];
+                const showEngFirst = Math.random() < 0.5;
+                front = showEngFirst ? pair.eng : pair.rus;
+                back = showEngFirst ? pair.rus : pair.eng;
+                break;
+
+            case 'toEndBoth':
+            case 'onlyRus':
+            case 'onlyEng':
+                if (preparedSequence.length === 0) {
+                    // This case might happen if file loading failed after selecting mode,
+                    // or if wordPairs was empty initially.
+                     updateCard("Нет слов", "Проверьте файл или режим");
+                     return;
+                }
+                 if (currentIndex >= preparedSequence.length) {
+                     // Optionally, show a message that the list ended or disable next button
+                     // For now, just stop or loop back (looping back as originally implemented)
+                     currentIndex = 0; // Loop back
+                     // updateCard("Конец списка", "Смените режим или начните заново");
+                     // return; // Or stop here
+                 }
+                 // Make sure preparedSequence[currentIndex] exists before accessing properties
+                 if (currentIndex < preparedSequence.length) {
+                    front = preparedSequence[currentIndex].front;
+                    back = preparedSequence[currentIndex].back;
+                    currentIndex++;
+                 } else {
+                    // Should not happen if looping or stopping correctly, but as a fallback:
+                    updateCard("Ошибка", "Неверный индекс");
+                    return;
+                 }
+                break;
+            default:
+                 updateCard("Ошибка", "Неизвестный режим");
+                 return; // Stop if mode is invalid
         }
 
-        return [randomWord, translationOfRandomElement];
+        updateCard(front, back);
     }
 
-    function renderWords(words) {
-        setAnotherBackgrounds();
-        frontWord.textContent = words[0];
-        backWord.textContent = words[1];
+     function updateCard(frontText, backText) {
+        cardFrontText.textContent = frontText || " "; // Use space if empty
+        cardBackText.textContent = backText || " ";  // Use space if empty
+
+        // --- УДАЛЕНИЕ/ИЗМЕНЕНИЕ ЛОГИКИ СТИЛИЗАЦИИ ---
+        // Убираем специальное форматирование для "пустой" обратной стороны,
+        // так как теперь она всегда должна содержать перевод в этих режимах.
+        const backFace = wordCard.querySelector('.card-back');
+        // Просто устанавливаем стандартные стили (если они вдруг менялись)
+        backFace.style.backgroundColor = '#d1e0eb'; // Restore default style
+        backFace.style.color = '#222';         // Restore default style
+
+        /* Старая логика, которая теперь не нужна:
+        if (!backText || backText.trim() === "") {
+             backFace.style.backgroundColor = '#f8f9fa'; // Lighter background
+             backFace.style.color = '#adb5bd'; // Lighter text
+             cardBackText.textContent = '-'; // Placeholder for empty back
+        } else {
+             backFace.style.backgroundColor = '#d1e0eb'; // Restore default style
+             backFace.style.color = '#222';
+        }
+        */
     }
 
-    function handleNextButtonClick() {
-        const words = returnRandomWordFromDict(dict);
-        renderWords(words);
+    function flipCard() {
+        // --- ИЗМЕНЕНИЕ 2 ---
+        // Убираем условие, которое запрещало переворот в режимах onlyRus/onlyEng
+        /* Старое условие:
+        if ((currentMode === 'onlyRus' || currentMode === 'onlyEng') && cardBackText.textContent === '-') {
+             return;
+        }
+        */
+        // Теперь просто переворачиваем карточку при клике в любом случае
+        wordCard.classList.toggle('is-flipped');
     }
 
-    function chosenMode(dict) {
-        buttons[0].addEventListener("click", function() {
-            startArea.style.display = "none";
-            card.style.display = "block";
-            returnFirstWords(dict);
-            returnWords(dict);
-        });
-
-        buttons[1].addEventListener("click", function() {
-            console.log("Clicked on the second version button");
-        });
+    function resetCardState() {
+         wordCard.classList.remove('is-flipped');
     }
 
-    function setAnotherBackgrounds() {
-        const colors = getRandomColors();
-        frontBackground.style.backgroundColor = colors[0];
-        backBackground.style.backgroundColor = colors[1];
-    }
-
-    function getRandomColors() {
-        const colors = [
-        '#4f4a2a', '#b00b1e', '#3f0e07', 
-        '#4f4a2a', '#000080', '#801818', 
-        '#556b2f', '#672c47', '#2c4767', 
-        '#6f4e37', '#81655F', '#000000', 
-        '#581845', '#900C3F', '#614751'];
-
-        const index1 = Math.floor(Math.random() * colors.length);
-        let index2;
-        do {
-          index2 = Math.floor(Math.random() * colors.length);
-        } while (index2 === index1);
-      
-        return [colors[index1], colors[index2]];
-      }
 });
