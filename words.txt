@@ -61,3 +61,4 @@ Depend on - Зависеть от
 Differ - отличаться 
 Point out - Отметить
 Addicted to - Зависим от
+Leave for - Уехать в, Покинуть куда-то
