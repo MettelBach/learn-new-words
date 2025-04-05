@@ -1,56 +1,51 @@
-Appears - появляется
-Within - внутри
-Essence - сущность 
-Declare - объявить
-Append - добавить
-Far - далеко
-Exist - существует
-Received - полученный
-Variable - переменная
-Divide - разделять
-Admire - восхищаться
-Interrupt - прерывать
-Deserve - заслуживать
-It's decided - это решено
-Decide - решить
-Unwanted - нежеланные
-Were Supposed - должен был
-Only egg - единственное, одно яйцо
-Reflect - отражать
-Advantage - преимущество
-Submit an application - отправить заявку
-Nearby - возле
-Appointment -встреча
-Grab - хватать
-Almost - почти
-Expect - ожидать
-Careful - осторожен
-I guess - я предполагаю
-Hard headed - упрямый
-Convince - убеждать
-Prepared - готов
-Above - выше
-Keep - держать
-Summon - вызвать
-Performs - выполнить
-Discard - отказаться
-Madness - безумие
-Concern - беспокойство
-Forward - вперед
-Distracted - не сосредоточен
-Dare - осмелиться
-Unless - если не
-Doubt - сомневаться
-Perhaps - возможно
-Precisely - именно так
-Weak - слабый
-Rush - торопить
-Plenty - множество
-Occur - происходить
-Increase - увеличить
-Careless - неосторожен
-Able to do - способен сделать
-Wrapper Class - Обертка
-Provide - предоставлять
-Otherwise - в противном случае
-Determine - определять
+Fed up - Сыт по горло
+Keen on - Увлекаться
+Gambling - Азарнтные игры
+Excited about - Восхищен
+Satisfied with - Удоволетворен
+Disappointed about - Разочарован
+Rely on - Положиться на
+Unxpectedly - Неожиданно
+Let down - Подводить
+Look forward to - Ждать с нетерпением
+Purse - Кошелек
+Purchase - Приобретать
+Order - Заказывать
+Obviously - Очевидно
+Definetly - Определенно
+Suppose - Предполагать
+Mess - Беспорядок
+Behavior - Поведение
+Suddenly - Случайно
+Lead to - Приводить
+Consist of - Состоит из
+Managed to - Суметь
+Succeeded in - Удалось
+Refuse - Отказ
+Refusal - Отказывать
+Lack of - Нехватка
+Confidence - Уверенность
+Advantage - Преимущество
+By chance - Случайно
+By heart - На изусть
+On phone - По телефону
+On purpose - С целью, Намеренно
+Purpose - Цель
+In fact - На самом деле
+Mostly - В основном
+For pleasure - Для удовольствия
+In any case - В любом случае
+On the whole - В целом
+Attractive - Привлекательная
+Accept - Принять
+Unaccepteble - Неприемлемо
+Shout at - Кричать на
+Accuse of - Обвинять
+Reduce - Снижать
+Patience - Терпение
+Insist on - Настаивать 
+Belong to - Принадлежать
+Strangely - Странно
+Criticism - Критика
+Issue - Проблема, вопрос
+Complain to - Жаловаться на
