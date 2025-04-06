@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Learner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Indie+Flower&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Roboto+Slab&family=Rubik+Mono+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,23 +29,57 @@
                 <button class="btn mode-btn" data-mode="toEndBoth">До конца (Оба направления)</button>
                 <button class="btn mode-btn" data-mode="onlyRus">Только Русский</button>
                 <button class="btn mode-btn" data-mode="onlyEng">Только Английский</button>
+                <button class="btn mode-btn" data-mode="quiz_rus_eng">Викторина (Рус -> Eng)</button>
+                <button class="btn mode-btn" data-mode="quiz_eng_rus">Викторина (Eng -> Rus)</button>
+                <button class="btn mode-btn" data-mode="quiz_mixed">Викторина (Смешанный)</button>
+                 <button class="btn mode-btn" data-mode="dictionary">Просмотр словаря</button>
             </div>
-        </section>
+             <button id="back-to-load-btn" class="btn btn-secondary">Загрузить другой файл</button> </section>
 
         <section id="card-area" class="centered-section hidden">
             <div class="card-container">
                 <div class="card" id="word-card">
                     <div class="card-face card-front">
-                        <p id="card-front-text">Front</p>
+                        <p id="card-front-text" class="variable-font">Front</p>
                     </div>
                     <div class="card-face card-back">
                         <p id="card-back-text">Back</p>
                     </div>
                 </div>
             </div>
-             <p class="instructions">Нажмите на карточку, чтобы увидеть перевод.</p>
-            <button id="next-btn" class="btn">Следующее</button>
-            <button id="change-mode-btn" class="btn btn-secondary">Сменить режим</button>
+            <div id="quiz-options-container" class="quiz-options hidden">
+                </div>
+             <p id="quiz-feedback" class="quiz-feedback hidden"></p> <p class="instructions hidden">Нажмите на карточку, чтобы увидеть перевод.</p>
+            <div class="card-controls">
+                 <button id="next-btn" class="btn">Следующее</button>
+                 <button id="change-mode-btn" class="btn btn-secondary">Сменить режим</button>
+            </div>
+        </section>
+
+         <section id="quiz-results-area" class="centered-section hidden">
+             <h2>Результаты викторины</h2>
+             <p id="quiz-score-display"></p>
+             <h3>Неправильные ответы:</h3>
+             <ul id="incorrect-answers-list">
+                 </ul>
+             <button id="quiz-return-btn" class="btn">К выбору режима</button>
+         </section>
+
+        <section id="dictionary-view-section" class="centered-section hidden">
+            <h2>Ваш словарь</h2>
+            <div class="dictionary-table-container">
+                 <table id="dictionary-table">
+                     <thead>
+                         <tr>
+                             <th>Русский</th>
+                             <th>Английский</th>
+                         </tr>
+                     </thead>
+                     <tbody id="dictionary-table-body">
+                         </tbody>
+                 </table>
+            </div>
+            <button id="dictionary-back-btn" class="btn">Назад к режимам</button>
         </section>
 
     </div>
