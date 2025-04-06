@@ -30,7 +30,7 @@ By chance - Случайно
 By heart - На изусть
 On phone - По телефону
 On purpose - С целью, Намеренно
-Purpose - Цель
+Purpose - Цель (Цель жизни)
 In fact - На самом деле
 Mostly - В основном
 For pleasure - Для удовольствия
@@ -48,8 +48,3 @@ Belong to - Принадлежать
 Strangely - Странно
 Criticism - Критика
 Issue - Проблема, вопрос
-Complain to - Жаловаться на
-On the right - Справа
-On the left - Слева
-Accident - случай
-Somehow - как-то
