@@ -6,14 +6,15 @@
 }
 
 body {
-  font-family: sans-serif;
+  font-family: 'Merriweather', serif; /* Default font */
   background-color: #f4f7f6;
   color: #333;
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Align to top */
   min-height: 100vh;
-  padding-top: 40px; /* Add some space at the top */
+  padding-top: 30px; /* Adjust top padding */
+  padding-bottom: 30px;
 }
 
 .app-container {
@@ -22,13 +23,14 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 600px;
+  max-width: 650px; /* Slightly wider */
   width: 90%;
 }
 
 h1, h2 {
   margin-bottom: 25px;
   color: #2a3d45;
+   font-family: 'Roboto Slab', serif; /* Heading font */
 }
 
 /* Utility */
@@ -42,6 +44,7 @@ h1, h2 {
   align-items: center;
   gap: 15px; /* Space between elements in the section */
   width: 100%;
+  margin-bottom: 20px; /* Add space below sections */
 }
 
 /* Buttons */
@@ -57,6 +60,7 @@ h1, h2 {
   transition: background-color 0.2s ease, transform 0.1s ease;
   text-decoration: none; /* For label styled as button */
   text-align: center;
+   font-family: 'Roboto Slab', serif; /* Button font */
 }
 
 .btn:hover:not(:disabled) {
@@ -70,6 +74,7 @@ h1, h2 {
 .btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .btn-secondary {
@@ -78,7 +83,6 @@ h1, h2 {
 .btn-secondary:hover:not(:disabled) {
   background-color: #5a6268; /* Darker gray */
 }
-
 
 /* File Loader */
 #file-loader p {
@@ -97,13 +101,22 @@ h1, h2 {
   display: flex;
   flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
   justify-content: center;
-  gap: 15px;
+  gap: 10px; /* Adjust gap */
+  margin-bottom: 15px; /* Space before back button */
 }
+
+/* --- Font Classes --- */
+.font-caveat { font-family: 'Caveat', cursive; font-size: 2.2rem; }
+.font-indie { font-family: 'Indie Flower', cursive; font-size: 2rem; }
+.font-merriweather { font-family: 'Merriweather', serif; font-size: 1.6rem; }
+.font-roboto-slab { font-family: 'Roboto Slab', serif; font-size: 1.7rem; }
+.font-rubik-mono { font-family: 'Rubik Mono One', monospace; font-size: 1.5rem; } /* Monospace looks like print */
 
 /* Card Area */
 .card-container {
-  width: 350px; /* Adjust width as needed */
-  height: 200px; /* Adjust height as needed */
+  width: 90%; /* Make responsive */
+  max-width: 400px; /* Max width */
+  height: 220px; /* Adjust height as needed */
   perspective: 1000px; /* Vanishing point for 3D */
   margin-bottom: 20px;
 }
@@ -114,7 +127,11 @@ h1, h2 {
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.6s;
-  cursor: pointer;
+}
+
+/* Only allow clicking to flip if NOT in quiz mode */
+.card:not(.quiz-active) {
+    cursor: pointer;
 }
 
 .card.is-flipped {
@@ -132,9 +149,9 @@ h1, h2 {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-size: 1.5rem; /* Adjust font size */
   text-align: center;
   overflow-wrap: break-word; /* Wrap long words */
+  line-height: 1.4; /* Improve readability */
 }
 
 .card-front {
@@ -142,19 +159,159 @@ h1, h2 {
   color: #333;
 }
 
+.card-front .variable-font {
+   /* Base size - specific font classes will override */
+   font-size: 1.6rem;
+}
+
+
 .card-back {
   background-color: #d1e0eb; /* Slightly darker blue */
   color: #222;
   transform: rotateY(180deg);
+  font-size: 1.5rem; /* Font size for back */
 }
 
 #card-area .instructions {
   color: #666;
   font-size: 0.9em;
-  margin-top: -10px; /* Pull closer to card */
+  margin-top: -15px; /* Pull closer */
   margin-bottom: 15px;
 }
 
-#card-area button {
-  margin-top: 5px;
+.card-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+
+/* --- Quiz Styles --- */
+.quiz-options {
+  display: flex;
+  flex-direction: column; /* Stack options vertically */
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 450px; /* Limit width of options */
+  margin-top: 5px; /* Space below card */
+  margin-bottom: 15px;
+}
+
+.quiz-option-btn {
+  width: 100%; /* Make buttons take full width */
+  padding: 10px 15px;
+  font-size: 1rem;
+  background-color: #e0e0e0; /* Default gray */
+  color: #333;
+  border: 1px solid #ccc;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  background-color: #d4d4d4;
+  border-color: #bbb;
+}
+
+.quiz-option-btn.correct {
+    background-color: #90ee90; /* Light green */
+    color: #115e11;
+    border-color: #5dbb5d;
+}
+
+.quiz-option-btn.incorrect {
+    background-color: #ffcccb; /* Light red */
+    color: #a31410;
+    border-color: #f38986;
+}
+
+.quiz-option-btn:disabled {
+    opacity: 0.8;
+    cursor: default;
+}
+
+.quiz-feedback {
+    font-weight: bold;
+    margin-top: -5px;
+    min-height: 1.2em; /* Reserve space */
+}
+
+.quiz-feedback.correct {
+    color: green;
+}
+
+.quiz-feedback.incorrect {
+    color: red;
+}
+
+/* --- Quiz Results Styles --- */
+#quiz-results-area {
+    text-align: left; /* Align text left */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+#quiz-results-area h2, #quiz-results-area h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+#quiz-results-area p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+#incorrect-answers-list {
+    list-style: none; /* Remove default bullets */
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+#incorrect-answers-list li {
+    background-color: #fff;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+#incorrect-answers-list li .orig { font-weight: bold; }
+#incorrect-answers-list li .trans { font-style: italic; color: #555; }
+
+
+/* --- Dictionary View Styles --- */
+.dictionary-table-container {
+    width: 100%;
+    max-height: 400px; /* Limit height and allow scrolling */
+    overflow-y: auto; /* Add vertical scroll if needed */
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+
+#dictionary-table {
+    width: 100%;
+    border-collapse: collapse; /* Merge borders */
+}
+
+#dictionary-table th,
+#dictionary-table td {
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    text-align: left;
+}
+
+#dictionary-table th {
+    background-color: #e9f1f7; /* Light blue header */
+    color: #333;
+    position: sticky; /* Make header sticky */
+    top: 0; /* Stick to the top of the container */
+    z-index: 1;
+}
+
+#dictionary-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Zebra striping */
+}
+
+#dictionary-table tbody tr:hover {
+    background-color: #f1f1f1; /* Highlight on hover */
 }
