@@ -1,7 +1,12 @@
+Complain to - Жаловаться на
+On the right - Справа
+On the left - Слева
+Accident - случай
+Somehow - как-то
 Get in touch with someone - Связаться с кем-то
 Into - На/К
 By mistake - По ошибке
-Biterly - горько
+Biterly - Горько
 Depend on - Зависеть от
 Differ - отличаться 
 Point out - Отметить
@@ -32,4 +37,11 @@ Enter - Входить, поступать, присоелиняться
 Rude - Грубый
 Notice - Заметить
 Lend to - Одалживать
-On the whole - В целом
+Cuisine - Кухня
+Honestly - Честно говоря
+Goal - Цель (буквально)
+Habit - Привычка
+Selfish - Эгоистичный
+Calmly - Спокойно
+Though - Хотя (разговорно)
+Although - Хотя (формально)
