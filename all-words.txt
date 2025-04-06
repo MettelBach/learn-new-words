@@ -30,7 +30,7 @@ By chance - Случайно
 By heart - На изусть
 On phone - По телефону
 On purpose - С целью, Намеренно
-Purpose - Цель
+Purpose - Цель (Цель жизни)
 In fact - На самом деле
 Mostly - В основном
 For pleasure - Для удовольствия
@@ -56,7 +56,7 @@ Somehow - как-то
 Get in touch with someone - Связаться с кем-то
 Into - На/К
 By mistake - По ошибке
-Biterly - горько
+Biterly - Горько
 Depend on - Зависеть от
 Differ - отличаться 
 Point out - Отметить
@@ -87,3 +87,11 @@ Enter - Входить, поступать, присоелиняться
 Rude - Грубый
 Notice - Заметить
 Lend to - Одалживать
+Cuisine - Кухня
+Honestly - Честно говоря
+Goal - Цель (буквально)
+Habit - Привычка
+Selfish - Эгоистичный
+Calmly - Спокойно
+Though - Хотя (разговорно)
+Although - Хотя (формально)
