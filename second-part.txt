@@ -75,6 +75,7 @@ Be over - Заканчиваться (Finish)
 Figure out - Понимать (Understand)
 Sort out - Решить (Solve)
 Left for - Уехать в
+Have a rest - Отдыхать
 Get in - Входить, садится
 Moved - Переехать
 Call back - Перезвонить
