@@ -129,3 +129,4 @@ Get in - Входить, садится
 Moved - Переехать
 Call back - Перезвонить
 Родился 1 Января - Was born on January 1
+Have a rest - Отдыхать
