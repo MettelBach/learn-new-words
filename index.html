@@ -32,31 +32,32 @@
                 <button class="btn mode-btn" data-mode="quiz_rus_eng">Викторина (Рус -> Eng)</button>
                 <button class="btn mode-btn" data-mode="quiz_eng_rus">Викторина (Eng -> Rus)</button>
                 <button class="btn mode-btn" data-mode="quiz_mixed">Викторина (Смешанный)</button>
-                 <button class="btn mode-btn" data-mode="dictionary">Просмотр словаря</button>
-            </div>
-             <button id="back-to-load-btn" class="btn btn-secondary">Загрузить другой файл</button> </section>
-
-        <section id="card-area" class="centered-section hidden">
-            <div class="card-container">
-                <div class="card" id="word-card">
-                    <div class="card-face card-front">
-                        <p id="card-front-text" class="variable-font">Front</p>
-                    </div>
-                    <div class="card-face card-back">
-                        <p id="card-back-text">Back</p>
-                    </div>
-                </div>
-            </div>
-            <div id="quiz-options-container" class="quiz-options hidden">
-                </div>
-             <p id="quiz-feedback" class="quiz-feedback hidden"></p> <p class="instructions hidden">Нажмите на карточку, чтобы увидеть перевод.</p>
-            <div class="card-controls">
-                 <button id="next-btn" class="btn">Следующее</button>
-                 <button id="change-mode-btn" class="btn btn-secondary">Сменить режим</button>
-            </div>
+                <button class="btn mode-btn" data-mode="dictionary">Просмотр словаря</button> </div>
+            <button id="back-to-load-btn" class="btn btn-secondary">Загрузить другой файл</button>
         </section>
 
-         <section id="quiz-results-area" class="centered-section hidden">
+        <section id="card-area" class="centered-section hidden">
+             <div class="card-container">
+                 <div class="card" id="word-card">
+                     <div class="card-face card-front">
+                         <p id="card-front-text" class="variable-font">Front</p>
+                     </div>
+                     <div class="card-face card-back">
+                         <p id="card-back-text">Back</p>
+                     </div>
+                 </div>
+             </div>
+             <div id="quiz-options-container" class="quiz-options hidden">
+                 </div>
+             <p id="quiz-feedback" class="quiz-feedback hidden"></p>
+             <p class="instructions hidden">Нажмите на карточку, чтобы увидеть перевод.</p>
+             <div class="card-controls">
+                  <button id="next-btn" class="btn">Следующее</button>
+                  <button id="change-mode-btn" class="btn btn-secondary">Сменить режим</button>
+             </div>
+         </section>
+
+        <section id="quiz-results-area" class="centered-section hidden">
              <h2>Результаты викторины</h2>
              <p id="quiz-score-display"></p>
              <h3>Неправильные ответы:</h3>
@@ -73,13 +74,23 @@
                          <tr>
                              <th>Русский</th>
                              <th>Английский</th>
-                         </tr>
+                             <th>Действия</th> </tr>
                      </thead>
                      <tbody id="dictionary-table-body">
                          </tbody>
                  </table>
             </div>
-            <button id="dictionary-back-btn" class="btn">Назад к режимам</button>
+
+            <div id="add-word-form">
+                <h3>Добавить новое слово</h3>
+                <label for="new-rus-input">Русский:</label>
+                <input type="text" id="new-rus-input">
+                <label for="new-eng-input">Английский:</label>
+                <input type="text" id="new-eng-input">
+                <button id="add-word-btn" class="btn">Добавить</button>
+            </div>
+
+            <button id="dictionary-back-btn" class="btn btn-secondary">Назад к режимам</button>
         </section>
 
     </div>
