@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-btn');
     const changeModeBtn = document.getElementById('change-mode-btn');
 
-    // Quiz Elements
     const quizOptionsContainer = document.getElementById('quiz-options-container');
     const quizFeedback = document.getElementById('quiz-feedback');
     const quizResultsArea = document.getElementById('quiz-results-area');
@@ -611,4 +610,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-}); // End DOMContentLoaded
+});
