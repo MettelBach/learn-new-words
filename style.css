@@ -315,3 +315,142 @@ h1, h2 {
 #dictionary-table tbody tr:hover {
     background-color: #f1f1f1; /* Highlight on hover */
 }
+
+/* Добавьте этот код в конец вашего файла style.css */
+
+/* --- Dictionary View Styles --- */
+#dictionary-view-section {
+  width: 100%; /* Занять всю ширину контейнера */
+  /* Можно добавить padding, если нужно */
+}
+
+/* Контейнер для таблицы, чтобы сделать ее прокручиваемой */
+.dictionary-table-container {
+  width: 100%;
+  max-height: 400px; /* Ограничение высоты, появится скролл */
+  overflow-y: auto;  /* Вертикальный скролл при необходимости */
+  border: 1px solid #ccc;
+  margin-bottom: 20px; /* Отступ снизу */
+  border-radius: 5px; /* Небольшое скругление */
+}
+
+#dictionary-table {
+  width: 100%;
+  border-collapse: collapse; /* Схлопывание границ ячеек */
+}
+
+#dictionary-table th,
+#dictionary-table td {
+  border: 1px solid #ddd;
+  padding: 10px 12px; /* Внутренние отступы ячеек */
+  text-align: left;   /* Выравнивание текста по левому краю */
+  vertical-align: middle; /* Вертикальное выравнивание по центру */
+  font-size: 0.95rem; /* Немного уменьшим шрифт в таблице */
+}
+
+#dictionary-table th {
+  background-color: #e9f1f7; /* Светло-голубой фон заголовка */
+  color: #333;
+  position: sticky;   /* "Прилипающий" заголовок */
+  top: 0;             /* Прилипать к верху контейнера */
+  z-index: 1;         /* Заголовок поверх контента при скролле */
+  font-weight: bold;
+}
+
+/* Zebra striping для строк таблицы */
+#dictionary-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Подсветка строки при наведении */
+#dictionary-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Стили для колонки с кнопками действий */
+#dictionary-table td:last-child {
+  text-align: center; /* Центрируем кнопки */
+  white-space: nowrap; /* Запрещаем перенос кнопок */
+  width: 80px; /* Фиксированная ширина для кнопок */
+}
+
+/* Стили для самих кнопок действий */
+#dictionary-table .action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 5px; /* Маленькие отступы */
+  font-size: 1.2rem; /* Размер иконок (если используете emoji) */
+  margin: 0 3px;    /* Небольшой отступ между кнопками */
+  color: #555;      /* Цвет иконок по умолчанию */
+  transition: color 0.2s ease, transform 0.1s ease;
+  vertical-align: middle; /* Выравнивание по центру строки */
+}
+
+#dictionary-table .action-btn:hover {
+  opacity: 0.8; /* Небольшая прозрачность при наведении */
+}
+
+#dictionary-table .edit-btn:hover {
+  color: #007bff; /* Синий цвет при наведении на "Редактировать" */
+}
+
+#dictionary-table .delete-btn:hover {
+  color: #dc3545; /* Красный цвет при наведении на "Удалить" */
+}
+
+#dictionary-table .action-btn:active {
+  transform: scale(0.95); /* Эффект нажатия */
+}
+
+
+/* --- Форма добавления нового слова --- */
+#add-word-form { /* Используйте ID вашего контейнера формы */
+  display: flex;
+  flex-wrap: wrap; /* Разрешить перенос на маленьких экранах */
+  gap: 10px;       /* Расстояние между элементами формы */
+  align-items: center; /* Выравнивание по вертикали */
+  justify-content: center; /* Центрирование по горизонтали */
+  margin-top: 20px;  /* Отступ сверху от таблицы */
+  padding: 15px;
+  border: 1px dashed #ccc; /* Пунктирная рамка для визуального разделения */
+  border-radius: 5px;
+}
+
+#add-word-form input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  flex-grow: 1; /* Позволить инпутам растягиваться */
+  min-width: 150px; /* Мин. ширина инпута перед переносом */
+}
+
+/* Стили для кнопки добавления (если у нее свой ID) */
+#add-word-btn {
+  /* Использует .btn стили, можно добавить flex-shrink */
+  flex-shrink: 0; /* Не сжимать кнопку */
+}
+
+/* Опционально: Заголовок для секции добавления */
+#add-word-form h3 {
+  width: 100%; /* Занять всю ширину */
+  text-align: center;
+  margin-bottom: 10px;
+  color: #444;
+  font-size: 1.1rem;
+  font-weight: 600; /* Сделать пожирнее */
+}
+
+/* Стили для кнопки "Назад к выбору режима" в режиме словаря */
+#back-to-modes-dict-btn { /* Убедитесь, что у кнопки есть этот ID */
+  margin-top: 25px; /* Отступ сверху */
+}
+
+/* Уточнение для ячейки с сообщением "Словарь пуст" */
+#dictionary-table td[colspan="3"] {
+  text-align: center !important; /* Переопределяем выравнивание */
+  font-style: italic;
+  color: #777;
+  padding: 20px;
+}
