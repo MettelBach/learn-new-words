@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements ---
     const fileLoaderSection = document.getElementById('file-loader');
     const fileInput = document.getElementById('file-input');
     const fileNameDisplay = document.getElementById('file-name-display');
@@ -7,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modeSelectorSection = document.getElementById('mode-selector');
     const modeButtonsContainer = document.querySelector('.mode-buttons');
-    const backToLoadBtn = document.getElementById('back-to-load-btn'); // Back to file load
+    const backToLoadBtn = document.getElementById('back-to-load-btn');
 
     const cardAreaSection = document.getElementById('card-area');
     const wordCard = document.getElementById('word-card');
@@ -26,52 +25,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const incorrectAnswersList = document.getElementById('incorrect-answers-list');
     const quizReturnBtn = document.getElementById('quiz-return-btn');
 
-    // Dictionary View Elements
     const dictionaryViewSection = document.getElementById('dictionary-view-section');
     const dictionaryTableBody = document.getElementById('dictionary-table-body');
     const dictionaryBackBtn = document.getElementById('dictionary-back-btn');
 
-    // --- State Variables ---
-    let wordPairs = []; // Array of { eng: "...", rus: "..." }
+    let wordPairs = [];
     let currentMode = null;
     let currentIndex = 0;
-    // Теперь содержит { front: "...", back: "...", lang: "eng"|"rus", originalPair?: {...} }
     let preparedSequence = [];
-    const availableFonts = [ // CSS классы для шрифтов в style.css
+    const availableFonts = [
         'font-caveat',
         'font-indie',
         'font-merriweather',
         'font-roboto-slab',
         'font-rubik-mono'
     ];
-    const engRegex = /[a-zA-Z]/; // Регулярка для определения английского текста
+    const engRegex = /[a-zA-Z]/;
 
-    // Quiz State
     let quizScore = 0;
-    let incorrectQuizAnswers = []; // Stores { question: '...', correctAnswer: '...', selectedAnswer: '...' }
+    let incorrectQuizAnswers = [];
     let currentQuizCorrectAnswer = '';
-    let quizAnswersDisabled = false; // Prevent multiple clicks
+    let quizAnswersDisabled = false;
 
-    // --- Event Listeners ---
     fileInput.addEventListener('change', handleFileSelect);
     startBtn.addEventListener('click', showModeSelector);
-    modeButtonsContainer.addEventListener('click', handleModeSelection); // Event delegation
+    modeButtonsContainer.addEventListener('click', handleModeSelection);
     wordCard.addEventListener('click', () => {
-        // Allow flipping only if NOT in any quiz mode and card area is visible
         if (!currentMode?.startsWith('quiz') && !cardAreaSection.classList.contains('hidden')) {
              flipCard();
         }
     });
     nextBtn.addEventListener('click', handleNextClick);
     changeModeBtn.addEventListener('click', goToModeSelector);
-    backToLoadBtn.addEventListener('click', goToFileLoader); // Go back to file load
-    quizOptionsContainer.addEventListener('click', handleQuizAnswer); // Listener for quiz options
-    quizReturnBtn.addEventListener('click', goToModeSelector); // Back from quiz results
-    dictionaryBackBtn.addEventListener('click', goToModeSelector); // Back from dictionary view
+    backToLoadBtn.addEventListener('click', goToFileLoader);
+    quizOptionsContainer.addEventListener('click', handleQuizAnswer);
+    quizReturnBtn.addEventListener('click', goToModeSelector);
+    dictionaryBackBtn.addEventListener('click', goToModeSelector);
 
-    // --- Functions ---
-
-    // Utility: Fisher-Yates shuffle
     function shuffleArray(array) {
         let currentIndex = array.length, randomIndex;
         while (currentIndex !== 0) {
@@ -83,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // Utility: Get random elements from array (excluding some if needed)
     function getRandomElements(arr, num, exclude = []) {
         const available = arr.filter(item => !exclude.includes(item));
         shuffleArray(available);
@@ -105,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fileNameDisplay.textContent = '';
         startBtn.disabled = true;
         wordPairs = [];
-        fileInput.value = ''; // Reset file input
-        goToFileLoader(); // Show file loader
+        fileInput.value = '';
+        goToFileLoader();
     }
 
 
@@ -119,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetApp();
             } else {
                 console.log(`Loaded ${wordPairs.length} word pairs.`);
-                // Optional: Automatically proceed if file is valid? Or wait for "Start".
             }
         };
         reader.onerror = () => {
@@ -132,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function parseFileContent(text) {
         wordPairs = [];
         const lines = text.split('\n');
-        // engRegex уже определен глобально
 
         for (const line of lines) {
             const parts = line.split(/\s*-\s*/);
@@ -140,13 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const part1 = parts[0].trim();
                 const part2 = parts[1].trim();
                 if (part1 && part2) {
-                    // Определяем, где английское, где русское слово
                     if (engRegex.test(part1) && !engRegex.test(part2)) {
                         wordPairs.push({ eng: part1, rus: part2 });
                     } else if (!engRegex.test(part1) && engRegex.test(part2)) {
                         wordPairs.push({ eng: part2, rus: part1 });
                     } else {
-                        // Если оба языка одинаковы или не определяются - пропускаем
                         console.warn(`Skipping line due to ambiguous languages or format: "${line}"`);
                     }
                 }
@@ -159,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showModeSelector() {
         if (wordPairs.length > 0) {
             fileLoaderSection.classList.add('hidden');
-            dictionaryViewSection.classList.add('hidden'); // Hide others
+            dictionaryViewSection.classList.add('hidden');
             cardAreaSection.classList.add('hidden');
             quizResultsArea.classList.add('hidden');
             modeSelectorSection.classList.remove('hidden');
@@ -174,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         quizResultsArea.classList.add('hidden');
         dictionaryViewSection.classList.add('hidden');
         fileLoaderSection.classList.remove('hidden');
-        resetApp(); // Also clear words and file input
+        resetApp();
     }
 
 
@@ -191,48 +176,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentMode = event.target.dataset.mode;
         currentIndex = 0;
-        preparedSequence = []; // Сбрасываем последовательность при смене режима
+        preparedSequence = [];
         resetCardState();
 
-        modeSelectorSection.classList.add('hidden'); // Hide mode selector
+        modeSelectorSection.classList.add('hidden');
 
-        // Handle different modes
         if (currentMode === 'dictionary') {
             showDictionary();
         }
-        // Check if it's any quiz mode
         else if (currentMode.startsWith('quiz')) {
-            startQuiz(); // Let startQuiz handle specific quiz types
+            startQuiz();
         }
         else {
-            // Card-based modes
-            prepareSequenceForCardMode(); // Готовим последовательность (если нужно)
-             if (wordPairs.length === 0 && currentMode !== 'random') { // В random можно без слов, но он покажет сообщение
+            prepareSequenceForCardMode();
+             if (wordPairs.length === 0 && currentMode !== 'random') {
                  alert("Нет слов для начала!");
                  goToModeSelector();
                  return;
              } else if (currentMode !== 'random' && preparedSequence.length === 0) {
-                 // Если режим требует последовательности, но она пуста (например, после фильтрации)
                   alert("Не удалось подготовить слова для этого режима.");
                   goToModeSelector();
                   return;
              }
 
             cardAreaSection.classList.remove('hidden');
-            quizOptionsContainer.classList.add('hidden'); // Ensure quiz options are hidden
+            quizOptionsContainer.classList.add('hidden');
             quizFeedback.classList.add('hidden');
-            cardInstructions.classList.remove('hidden'); // Show card instructions
-            cardControls.classList.remove('hidden'); // Show card controls
-            wordCard.classList.remove('quiz-active'); // Allow flipping for card modes
-            nextBtn.textContent = "Следующее"; // Reset button text
-            nextBtn.disabled = false; // Ensure button is enabled initially for card modes
-            showNextCard(); // Show the first card
+            cardInstructions.classList.remove('hidden');
+            cardControls.classList.remove('hidden');
+            wordCard.classList.remove('quiz-active');
+            nextBtn.textContent = "Следующее";
+            nextBtn.disabled = false;
+            showNextCard();
         }
     }
 
-    // --- Dictionary Mode ---
     function showDictionary() {
-        dictionaryTableBody.innerHTML = ''; // Clear previous entries
+        dictionaryTableBody.innerHTML = '';
         if (wordPairs.length === 0) {
              const row = dictionaryTableBody.insertRow();
              const cell = row.insertCell();
@@ -240,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
              cell.textContent = 'Словарь пуст. Загрузите файл.';
              cell.style.textAlign = 'center';
         } else {
-            // Sort alphabetically by Russian word (optional but nice)
              const sortedPairs = [...wordPairs].sort((a, b) => a.rus.localeCompare(b.rus, 'ru'));
              sortedPairs.forEach(pair => {
                  const row = dictionaryTableBody.insertRow();
@@ -250,26 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
                  cellEng.textContent = pair.eng;
              });
         }
-        dictionaryViewSection.classList.remove('hidden'); // Show the dictionary section
+        dictionaryViewSection.classList.remove('hidden');
     }
 
-    // --- Card Modes Logic ---
     function prepareSequenceForCardMode() {
-        // Only prepare if it's a card mode needing a sequence
         if (!currentMode || wordPairs.length === 0 || currentMode === 'random' || currentMode.startsWith('quiz') || currentMode === 'dictionary') return;
 
-        // Используем копию, чтобы не изменять оригинальный wordPairs
         const shuffledPairs = shuffleArray([...wordPairs]);
-        preparedSequence = []; // Очищаем перед заполнением
+        preparedSequence = [];
 
         switch (currentMode) {
             case 'toEndBoth':
-                // СНАЧАЛА создаем полный список в обе стороны
                 shuffledPairs.forEach(pair => {
                     preparedSequence.push({ front: pair.rus, back: pair.eng, lang: 'rus' });
                     preparedSequence.push({ front: pair.eng, back: pair.rus, lang: 'eng' });
                 });
-                // ЗАТЕМ перемешиваем весь этот список
                 shuffleArray(preparedSequence);
                 break;
             case 'onlyRus':
@@ -283,17 +257,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showNextCard() {
-        if (wordPairs.length === 0 && currentMode !== 'random') { // Allow random mode to show 'no words' message
+        if (wordPairs.length === 0 && currentMode !== 'random') {
             updateCard("Нет слов", "Загрузите файл");
-            applyRandomFont(false); // Применяем стиль по умолчанию
+            applyRandomFont(false);
             nextBtn.disabled = true;
             return;
         }
-        resetCardState(); // Сбросить переворот карточки
+        resetCardState();
 
         let front = "";
         let back = "";
-        let isEnglish = false; // Является ли слово на лицевой стороне английским
+        let isEnglish = false;
         let isEndOfSequence = false;
 
         switch (currentMode) {
@@ -301,15 +275,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (wordPairs.length === 0) {
                     front = "Нет слов";
                     back = "Загрузите файл";
-                    isEnglish = false; // Не английское
-                    nextBtn.disabled = true; // Нельзя нажать "дальше"
+                    isEnglish = false;
+                    nextBtn.disabled = true;
                 } else {
                     const randomIndex = Math.floor(Math.random() * wordPairs.length);
                     const pair = wordPairs[randomIndex];
                     const showEngFirst = Math.random() < 0.5;
                     front = showEngFirst ? pair.eng : pair.rus;
                     back = showEngFirst ? pair.rus : pair.eng;
-                    isEnglish = showEngFirst; // Определяем язык лицевой стороны
+                    isEnglish = showEngFirst;
                     nextBtn.disabled = false;
                 }
                 break;
@@ -318,35 +292,31 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'onlyRus':
             case 'onlyEng':
                 if (preparedSequence.length === 0 && wordPairs.length > 0) {
-                     // Should have been prepared, maybe log error or try preparing again?
                      console.error("Sequence not prepared for mode:", currentMode);
-                     // Attempt to prepare on the fly (might mess up order if called mid-sequence)
                      prepareSequenceForCardMode();
-                     if(preparedSequence.length === 0) { // Still no sequence? Abort.
+                     if(preparedSequence.length === 0) {
                          updateCard("Ошибка", "Не удалось подготовить список");
-                         applyRandomFont(false); // Стиль по умолчанию
+                         applyRandomFont(false);
                          nextBtn.disabled = true;
                          return;
                      }
                 }
 
                 if (currentIndex >= preparedSequence.length) {
-                    isEndOfSequence = true; // Mark end
+                    isEndOfSequence = true;
                     front = "Конец списка!";
                     back = "Смените режим";
-                    isEnglish = false; // Сообщение не является английским словом
+                    isEnglish = false;
                 } else {
                     const currentItem = preparedSequence[currentIndex];
                     front = currentItem.front;
                     back = currentItem.back;
-                    isEnglish = currentItem.lang === 'eng'; // Берем язык из объекта
-                    // Don't increment here, increment happens *after* showing/handling click
+                    isEnglish = currentItem.lang === 'eng';
                 }
-                 // Disable button *only* if we've reached the end message
                 nextBtn.disabled = isEndOfSequence;
                 break;
 
-            default: // Should not happen if modes are handled correctly
+            default:
                 console.error("Unknown card mode in showNextCard:", currentMode)
                 updateCard("Ошибка", "Неизвестный режим");
                 isEnglish = false;
@@ -356,32 +326,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateCard(front, back);
 
-        // Применить шрифт только если это не сообщение о конце списка
         if (!isEndOfSequence) {
-            applyRandomFont(isEnglish); // Передаем флаг языка
+            applyRandomFont(isEnglish);
         } else {
-            applyRandomFont(false); // Применяем стиль по умолчанию для сообщения "Конец списка"
+            applyRandomFont(false);
         }
     }
 
-    /**
-     * Применяет случайный шрифт к лицевой стороне карточки,
-     * если isEnglish === true. Отдает предпочтение "рукописным" шрифтам.
-     * Если isEnglish === false, убирает все классы шрифтов.
-     * @param {boolean} isEnglish - Является ли текст на карточке английским.
-     */
     function applyRandomFont(isEnglish) {
-        // Всегда сначала удаляем ЛЮБОЙ предыдущий класс шрифта
         cardFrontText.classList.remove(...availableFonts);
-        // Убедимся что базовый класс для общих стилей есть (если он нужен)
-        // cardFrontText.classList.add('base-card-text-style'); // Пример, если есть базовый класс
-
+        
         if (isEnglish) {
-            const preferredFonts = ['font-caveat', 'font-indie']; // Рукописные/предпочтительные
+            const preferredFonts = ['font-caveat', 'font-indie']; 
             const otherFonts = availableFonts.filter(f => !preferredFonts.includes(f));
             let selectedFont = null;
 
-            // Вероятность выбора предпочтительного шрифта (0.7 = 70%)
             const chanceForPreferred = 0.7;
 
             const usePreferred = preferredFonts.length > 0 && Math.random() < chanceForPreferred;
@@ -389,31 +348,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (usePreferred) {
                 selectedFont = preferredFonts[Math.floor(Math.random() * preferredFonts.length)];
             } else if (otherFonts.length > 0) {
-                // Если не выбрали предпочтительный или их нет, выбираем из остальных
                 selectedFont = otherFonts[Math.floor(Math.random() * otherFonts.length)];
             } else if (preferredFonts.length > 0) {
-                 // Если других шрифтов нет, но есть предпочтительные - выбираем из них
                 selectedFont = preferredFonts[Math.floor(Math.random() * preferredFonts.length)];
             }
-            // Если список availableFonts пуст, selectedFont останется null
 
             if (selectedFont) {
                cardFrontText.classList.add(selectedFont);
-               console.log("Applied font:", selectedFont); // Для отладки
+               console.log("Applied font:", selectedFont);
             } else {
                 console.log("No font applied (list empty or error?)");
             }
 
         } else {
-             console.log("Applied default font (Russian word)"); // Для отладки
-            // Для русских слов ничего не добавляем, т.к. классы уже удалены выше
-            // Будут применяться стили CSS по умолчанию для #card-front-text
+             console.log("Applied default font (Russian word)");
         }
     }
 
 
     function updateCard(frontText, backText) {
-        cardFrontText.textContent = frontText || " "; // Use space if empty to maintain height
+        cardFrontText.textContent = frontText || " ";
         cardBackText.textContent = backText || " ";
     }
 
@@ -423,14 +377,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetCardState() {
         wordCard.classList.remove('is-flipped');
-        // Убираем шрифты при сбросе карточки, чтобы следующее слово отобразилось корректно
         cardFrontText.classList.remove(...availableFonts);
     }
 
-    // --- Quiz Mode Logic ---
-
     function startQuiz() {
-         // Check minimum word count (need 4 for 3 wrong + 1 correct)
          if (wordPairs.length < 4 && wordPairs.length > 0) {
              alert(`Для викторины нужно минимум 4 слова. У вас ${wordPairs.length}.`);
              goToModeSelector();
@@ -441,32 +391,30 @@ document.addEventListener('DOMContentLoaded', () => {
              return;
          }
 
-        // Reset quiz state
         currentIndex = 0;
         quizScore = 0;
         incorrectQuizAnswers = [];
-        preparedSequence = []; // Reset sequence
+        preparedSequence = [];
 
-        // Prepare sequence based on the specific quiz mode
         const shuffledPairs = shuffleArray([...wordPairs]);
 
         switch (currentMode) {
-            case 'quiz_rus_eng': // Rus -> Eng
+            case 'quiz_rus_eng':
                 shuffledPairs.forEach(pair => preparedSequence.push({
                     front: pair.rus, back: pair.eng, lang: 'rus', originalPair: pair
                 }));
                 break;
-            case 'quiz_eng_rus': // Eng -> Rus
+            case 'quiz_eng_rus':
                 shuffledPairs.forEach(pair => preparedSequence.push({
                     front: pair.eng, back: pair.rus, lang: 'eng', originalPair: pair
                 }));
                 break;
-            case 'quiz_mixed': // Mixed Rus/Eng -> Eng/Rus
+            case 'quiz_mixed':
                 shuffledPairs.forEach(pair => {
                     preparedSequence.push({ front: pair.rus, back: pair.eng, lang: 'rus', originalPair: pair });
                     preparedSequence.push({ front: pair.eng, back: pair.rus, lang: 'eng', originalPair: pair });
                 });
-                shuffleArray(preparedSequence); // Shuffle the combined sequence
+                shuffleArray(preparedSequence);
                 break;
             default:
                 console.error("Unknown quiz mode:", currentMode);
@@ -477,159 +425,133 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log(`Prepared quiz sequence for mode "${currentMode}" with ${preparedSequence.length} questions.`);
 
-        // Setup UI for quiz
         cardAreaSection.classList.remove('hidden');
         quizOptionsContainer.classList.remove('hidden');
         quizFeedback.classList.add('hidden');
         cardInstructions.classList.add('hidden');
         cardControls.classList.remove('hidden');
-        wordCard.classList.add('quiz-active'); // Prevent clicking card to flip
+        wordCard.classList.add('quiz-active');
         nextBtn.textContent = "Пропустить";
-        nextBtn.disabled = false; // Enable Skip/Next button
+        nextBtn.disabled = false;
 
-        showNextQuizQuestion(); // Display the first question
+        showNextQuizQuestion();
     }
 
     function showNextQuizQuestion() {
-        resetCardState(); // Ensure card is front-facing and font is reset
-        quizFeedback.classList.add('hidden'); // Hide previous feedback
-        quizOptionsContainer.innerHTML = ''; // Clear previous options
-        quizAnswersDisabled = false; // Re-enable answering
+        resetCardState();
+        quizFeedback.classList.add('hidden');
+        quizOptionsContainer.innerHTML = '';
+        quizAnswersDisabled = false;
 
         if (currentIndex >= preparedSequence.length) {
-            showQuizResults(); // Quiz finished
+            showQuizResults();
             return;
         }
 
         const currentItem = preparedSequence[currentIndex];
         const question = currentItem.front;
-        currentQuizCorrectAnswer = currentItem.back; // Store correct answer for checking
-        const isQuestionEnglish = currentItem.lang === 'eng'; // Язык вопроса
+        currentQuizCorrectAnswer = currentItem.back;
+        const isQuestionEnglish = currentItem.lang === 'eng';
 
-        updateCard(question, currentQuizCorrectAnswer); // Update card faces (back won't be visible initially)
-        applyRandomFont(isQuestionEnglish); // Apply font based on question language
+        updateCard(question, currentQuizCorrectAnswer);
+        applyRandomFont(isQuestionEnglish);
 
-        // Determine the language of the *answer* to generate correct options
         const correctAnswer = currentQuizCorrectAnswer;
         let allPossibleAnswersPool = [];
-        // engRegex определена глобально
 
-        // If the correct answer contains English letters, assume it's English
-        // Otherwise, assume it's Russian
         if (engRegex.test(correctAnswer)) {
-            // Expected answer is English, pool is all English words
             allPossibleAnswersPool = wordPairs.map(p => p.eng);
         } else {
-            // Expected answer is Russian, pool is all Russian words
             allPossibleAnswersPool = wordPairs.map(p => p.rus);
         }
 
-        // Prepare options: 1 correct + 3 unique incorrect from the correct pool
         const wrongAnswers = getRandomElements(
             allPossibleAnswersPool,
-            3, // Number of wrong options needed
-            [correctAnswer] // Exclude the correct answer itself
+            3,
+            [correctAnswer]
         );
 
-        // Check if enough wrong answers were found (handles small dictionaries)
         if (wrongAnswers.length < 3) {
             console.warn(`Could only find ${wrongAnswers.length} unique wrong answers for "${correctAnswer}". Need 3.`);
-            // We proceed, but there will be fewer than 4 choices.
         }
 
 
-        const options = shuffleArray([correctAnswer, ...wrongAnswers]); // Shuffle all options
+        const options = shuffleArray([correctAnswer, ...wrongAnswers]);
 
-        // Create buttons for options
         options.forEach(optionText => {
             const button = document.createElement('button');
             button.textContent = optionText;
             button.classList.add('btn', 'quiz-option-btn');
-            button.dataset.answer = optionText; // Store answer in data attribute
+            button.dataset.answer = optionText;
             quizOptionsContainer.appendChild(button);
         });
 
-         // Update button text after the first question or skip
-         nextBtn.textContent = "Пропустить"; // Кнопка всегда "Пропустить" до ответа
-         // Disable 'Next' until an answer is given/skipped AND the answer animation/feedback is done
-         nextBtn.disabled = false; // Skip должен быть доступен
+         nextBtn.textContent = "Пропустить";
+         nextBtn.disabled = false;
     }
 
     function handleQuizAnswer(event) {
         if (quizAnswersDisabled || !event.target.classList.contains('quiz-option-btn')) {
-            return; // Ignore clicks if disabled or not on an option button
+            return;
         }
 
-        quizAnswersDisabled = true; // Disable further answers for this question
+        quizAnswersDisabled = true;
         const selectedButton = event.target;
         const selectedAnswer = selectedButton.dataset.answer;
         const isCorrect = selectedAnswer === currentQuizCorrectAnswer;
 
-        // Visual feedback on buttons
         const optionButtons = quizOptionsContainer.querySelectorAll('.quiz-option-btn');
         optionButtons.forEach(btn => {
-            btn.disabled = true; // Disable all buttons
+            btn.disabled = true;
             if (btn.dataset.answer === currentQuizCorrectAnswer) {
-                btn.classList.add('correct'); // Highlight correct answer
-            } else if (btn === selectedButton) { // If incorrect was selected
+                btn.classList.add('correct');
+            } else if (btn === selectedButton) {
                  btn.classList.add('incorrect');
             }
         });
 
-        // Feedback text
         if (isCorrect) {
             quizScore++;
             quizFeedback.textContent = 'Правильно!';
-            quizFeedback.className = 'quiz-feedback correct'; // Use class for styling
+            quizFeedback.className = 'quiz-feedback correct';
         } else {
             quizFeedback.textContent = `Неправильно. Верный ответ: ${currentQuizCorrectAnswer}`;
             quizFeedback.className = 'quiz-feedback incorrect';
-            // Record incorrect answer
              const currentQuestionData = preparedSequence[currentIndex];
             incorrectQuizAnswers.push({
                  question: currentQuestionData.front,
                  correctAnswer: currentQuestionData.back,
-                 selectedAnswer: selectedAnswer // Record what was chosen
+                 selectedAnswer: selectedAnswer
              });
         }
         quizFeedback.classList.remove('hidden');
 
-        // Flip card to show the back (correct answer)
         if (!wordCard.classList.contains('is-flipped')) {
              flipCard();
         }
 
-         // Prepare for next step BUT don't advance index yet, handleNextClick will do that
-         nextBtn.disabled = false; // Enable the 'Next Question' button
+         nextBtn.disabled = false;
          nextBtn.textContent = (currentIndex + 1 >= preparedSequence.length) ? "Показать результаты" : "Следующий вопрос";
 
     }
 
-     // Handles clicks on the main "Next" button, routing based on mode
      function handleNextClick() {
-         // Check if it's any quiz mode
          if (currentMode?.startsWith('quiz')) {
-             // If quizAnswersDisabled is false, it means "Skip" was pressed
-             // If quizAnswersDisabled is true, it means an answer was given and this is "Next Question" / "Show Results"
-              if (!quizAnswersDisabled) { // Handle Skip
+              if (!quizAnswersDisabled) {
                   console.log("Skipped question");
                   quizFeedback.textContent = `Пропущено. Верный ответ: ${currentQuizCorrectAnswer}`;
-                  quizFeedback.className = 'quiz-feedback incorrect'; // Treat skip as incorrect for feedback display
+                  quizFeedback.className = 'quiz-feedback incorrect';
                   quizFeedback.classList.remove('hidden');
-                  quizAnswersDisabled = true; // Mark as handled for this round (like an incorrect answer)
+                  quizAnswersDisabled = true;
 
-                  // Disable option buttons visually after skip
                   const optionButtons = quizOptionsContainer.querySelectorAll('.quiz-option-btn');
                    optionButtons.forEach(btn => {
                        btn.disabled = true;
-                       // Optionally highlight the correct one even on skip
                        if(btn.dataset.answer === currentQuizCorrectAnswer) {
-                           btn.classList.add('correct'); // Show the right answer
+                           btn.classList.add('correct');
                        }
                     });
 
-
-                  // Record skipped answer
                   const currentQuestionData = preparedSequence[currentIndex];
                   incorrectQuizAnswers.push({
                       question: currentQuestionData.front,
@@ -637,21 +559,18 @@ document.addEventListener('DOMContentLoaded', () => {
                       selectedAnswer: "[Пропущено]"
                   });
 
-                  // Flip card to show the back (correct answer) when skipping
                   if (!wordCard.classList.contains('is-flipped')) {
                       flipCard();
                   }
-                  // Enable the 'Next' button to proceed after skipping and show correct text
                   nextBtn.disabled = false;
                   nextBtn.textContent = (currentIndex + 1 >= preparedSequence.length) ? "Показать результаты" : "Следующий вопрос";
 
-              } else { // Handle "Next Question" or "Show Results" after an answer was given or after skip
-                    currentIndex++; // Advance to the next question index
-                    showNextQuizQuestion(); // Will either show next question or results
+              } else {
+                    currentIndex++;
+                    showNextQuizQuestion();
               }
 
-         } else { // Handle next for card modes
-              // Only advance index for sequential card modes here
+         } else {
               if (currentMode !== 'random' && currentIndex < preparedSequence.length) {
                    currentIndex++;
               }
@@ -661,13 +580,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function showQuizResults() {
-        cardAreaSection.classList.add('hidden'); // Hide card/quiz area
-        quizResultsArea.classList.remove('hidden'); // Show results area
+        cardAreaSection.classList.add('hidden');
+        quizResultsArea.classList.remove('hidden');
 
         const totalQuestions = preparedSequence.length;
         quizScoreDisplay.textContent = `Ваш результат: ${quizScore} / ${totalQuestions}`;
 
-        incorrectAnswersList.innerHTML = ''; // Clear previous results
+        incorrectAnswersList.innerHTML = '';
 
         if (totalQuestions === 0) {
             const li = document.createElement('li');
@@ -680,7 +599,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             incorrectQuizAnswers.forEach(item => {
                 const li = document.createElement('li');
-                 // Display: Question - incorrect (correct: Answer) [You chose: Selected]
                  let incorrectText = `<span class="orig">${item.question}</span> - неверно (прав: <span class="trans">${item.correctAnswer}</span>)`;
                  if (item.selectedAnswer !== "[Пропущено]") {
                      incorrectText += ` [выбр: <span class="sel">${item.selectedAnswer}</span>]`;
