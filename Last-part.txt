@@ -1,57 +1,3 @@
-Excited about - Восхищен
-Disappointed about - Разочарован
-Let down - Подводить
-Obviously - Очевидно
-Definetly - Определенно
-Suppose - Предполагать
-Suddenly - Случайно
-Lead to - Приводить
-Consist of - Состоит из
-Lack of - Нехватка
-Confidence - Уверенность
-In fact - На самом деле
-Mostly - В основном
-For pleasure - Для удовольствия
-On the whole - В целом
-Accuse of - Обвинять
-Patience - Терпение
-Insist on - Настаивать 
-Belong to - Принадлежать
-Complain to - Жаловаться на
-Somehow - как-то
-Get in touch with someone - Связаться с кем-то
-Prepare for - Готовится к
-Immediatly - Немедленно
-Suffers from - Страдать от
-Introduce - Представлять, знакомить
-Get rid of - Избавиться от
-Completely - Полностью
-Cure - Лечение, лекарство
-Desease - заболевание
-Quite - Вполне
-Rude - Грубый
-Notice - Заметить
-Lend to - Одалживать
-Cuisine - Кухня
-Honestly - Честно говоря
-Goal - Цель (буквально)
-Habit - Привычка
-Selfish - Эгоистичный
-Calmly - Спокойно
-Though - Хотя (разговорно)
-Although - Хотя (формально)
-Honestly - Честно говоря
-At any rate - Во всяком случае (переносно)
-Measure - Мера (Измерения)
-At last - Наокнец
-On business - По делам
-Noon - Полдень
-Satisfactory - Удоволетворительно
-He finds it - Находит это
-Patient - Пациент
-The country - Сельская местность
-Ground floor - Партер
-Lie in bed - Лежать в кровати
 Corner - Угол
 Perhaps - Возможно
 Break down - Ломаться
@@ -69,5 +15,14 @@ Figure out - Понимать (Understand)
 Sort out - Решить (Solve)
 Left for - Уехать в
 Get in - Входить, садится
+At present - В настоящее время
+Be getting more and more - Становится все более и более
+It seems to me - Мне кажется, что
+As it seems to me that - Как мне кажется
+Look for - Искать
+Work on - Работать над
+Still - Все еще
 Moved - Переехать
+Call back - Перезвонить
 Родился 1 Января - Was born on January 1
+Have a rest - Отдыхать
