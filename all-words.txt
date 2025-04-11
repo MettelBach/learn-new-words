@@ -107,7 +107,7 @@ In cash - Наличными
 By card - Картой
 Patient - Пациент
 The country - Сельская местность
-Ground floor - Партер
+Groundfloor - Партер
 Lie in bed - Лежать в кровати
 Corner - Угол
 Perhaps - Возможно
